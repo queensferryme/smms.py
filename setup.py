@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name='smms.py',
-    version='0.0.1',
+    version='0.0.2',
     author='Queensferry',
     author_email='queensferry.me@gmail.com',
     description='command line toolkit for managing images at https://sm.ms',

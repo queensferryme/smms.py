@@ -14,10 +14,8 @@ import requests
 
 # Define constant variables
 COLORS = {
-    'INFO': '\033[95m',
-    'WARNING': '\033[93m',
-    'FAIL': '\033[91m',
-    'NORMAL': '\033[0m'
+    'WARNING': lambda s: '\033[0;33;40m{}\033[0m'.format(s),
+    'FAIL': lambda s: '\033[0;31;40m{}\033[0m'.format(s),
 }
 HISTORY = os.path.join(str(Path.home()), '.sm.ms.history')
 
@@ -30,7 +28,7 @@ def parse_pattern(pattern):
     pattern = [each.strip() for each in pattern.split(':', 1)]
     if len(pattern) != 2 or \
         pattern[0] not in ('filename', 'url', 'delete', 'comment'):
-        click.echo(COLORS['FAIL'] + 'ERROR: wrong pattern')
+        click.echo(COLORS['FAIL']('ERROR: wrong pattern'))
         exit()
     return pattern
 
@@ -46,7 +44,7 @@ def extract_history(history, dates):
     # Create list of specific dates
     for date in dates:
         if date not in history:
-            click.echo(COLORS['WARNING'] + 'WARNING: no commit on {}'.format(date))
+            click.echo(COLORS['WARNING']('WARNING: no commit on {}'.format(date)))
         else:
             snapshots.extend(history[date])
     return snapshots
@@ -68,7 +66,7 @@ def load_history():
     try:
         history = json.loads(history)
     except json.JSONDecodeError:
-        click.echo(COLORS['FAIL'] + 'ERROR: corrupted history file')
+        click.echo(COLORS['FAIL']('ERROR: corrupted history file'))
         exit()
     return history
 
@@ -92,7 +90,7 @@ def clear_history():
     '''
 
     requests.get('https://sm.ms/api/clear')
-    click.echo(COLORS['INFO'] + 'INFO: clear success!')
+    click.echo('INFO: clear success!')
 
 @cli.command('upload')
 @click.argument('images', nargs=-1, type=click.Path())
@@ -127,18 +125,17 @@ def upload_images(images, comment):
             status = json.loads(resp.text)
             # Handle success or failure
             if status['code'] == 'success':
-                click.echo(COLORS['INFO'] + \
-                           'INFO: {} upload success! url at {}' \
+                click.echo('INFO: {} upload success! url at {}' \
                            .format(os.path.abspath(image), status['data']['url']))
                 yield status
             else:
-                click.echo(COLORS['FAIL'] + 'ERROR: {} upload failed!' \
-                           .format(os.path.abspath(image)))
-                click.echo(COLORS['WARNING'] + 'WARNING: {}' \
-                           .format(status['msg']))
+                click.echo(COLORS['FAIL']('ERROR: {} upload failed!' \
+                           .format(os.path.abspath(image))))
+                click.echo(COLORS['WARNING']('WARNING: {}' \
+                           .format(status['msg'])))
         # User notification
         if not images:
-            click.echo(COLORS['WARNING'] + 'WARNING: nothing to upload!')
+            click.echo(COLORS['WARNING']('WARNING: nothing to upload!'))
 
     def __cache(statuses, comment):
         '''
@@ -182,12 +179,12 @@ def query_images(dates, pattern):
         snapshots = [each for each in snapshots if fnmatch(each[pattern[0]], pattern[1])]
     # Handle no-match-found
     if not snapshots:
-        click.echo(COLORS['WARNING'] + 'WARNING: nothing found!')
+        click.echo(COLORS['WARNING']('WARNING: nothing found!'))
         exit()
     # Output query results
-    click.echo(COLORS['WARNING'] + 'QUERY RESULTS:')
+    click.echo(COLORS['WARNING']('QUERY RESULTS:'))
     for index, snapshot in enumerate(snapshots):
-        click.echo(COLORS['INFO'] + '[{}]: {}'.format(index, snapshot))
+        click.echo('[{}]: {}'.format(index, snapshot))
 
 @cli.command('delete')
 @click.option('--All', '-A', is_flag=True,
@@ -218,7 +215,7 @@ def remove_images(all, dates, pattern):
     # Variables initialized
     history = load_history()
     if not history:
-        click.echo(COLORS['WARNING'] + 'WARNING: empty history file!')
+        click.echo(COLORS['WARNING']('WARNING: empty history file!'))
         exit()
     pattern = parse_pattern(pattern) if pattern else None
     urls = []
@@ -228,24 +225,24 @@ def remove_images(all, dates, pattern):
         snapshots = [each for each in snapshots if fnmatch(each[pattern[0]], pattern[1])]
     elif not all:
         for index, snapshot in enumerate(snapshots):
-            click.echo(COLORS['INFO'] + '[{}]: {}'.format(index, snapshot))
-        click.echo(COLORS['WARNING'] + 'Which would you like to remove? [index/q to quit]: ')
+            click.echo('[{}]: {}'.format(index, snapshot))
+        click.echo(COLORS['WARNING']('Which would you like to remove? [index/q to quit]: '))
         try:
             index = input()
             index = exit() if index.lower() == 'q' else int(index)
         except ValueError:
-            click.echo(COLORS['FAIL'] + 'ERROR: expect an integar!')
+            click.echo(COLORS['FAIL']('ERROR: expect an integar!'))
             exit()
         else:
             snapshots = [snapshots[index]]
     # If nothing found
     if not snapshots:
-        click.echo(COLORS['WARNING'] + 'WARNING: nothing found!')
+        click.echo(COLORS['WARNING']('WARNING: nothing found!'))
     # Deleting all images in `snapshots` object
     for snapshot in snapshots:
         urls.append(snapshot['url'])
         requests.get(snapshot['delete'])
-        click.echo(COLORS['INFO'] + 'INFO: remove {} at {}'
+        click.echo('INFO: remove {} at {}'
                    .format(snapshot['filename'], snapshot['url']))
     __uncache(urls)
-    click.echo(COLORS['INFO'] + 'INFO: remove completed!')
+    click.echo('INFO: remove completed!')
