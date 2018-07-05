@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name='smms.py',
-    version='0.0',
+    version='0.0.1',
     author='Queensferry',
     author_email='queensferry.me@gmail.com',
     description='command line toolkit for managing images at https://sm.ms',
@@ -18,4 +18,9 @@ setup(
         [console_scripts]
         smms=main:cli
     ''',
+    classifiers=(
+        "Programming Language :: Python :: 3",
+        "License :: OSI Approved :: MIT License",
+        "Operating System :: OS Independent",
+    )
 )

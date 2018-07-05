@@ -1,20 +1,20 @@
-# sm.ms.py
+# smms.py
 
 [TOC]
 
 ## Introduction
 
-Python package `sm.ms.py` is a command line toolkit for managing images at [https://sm.ms](https://sm.ms). It provides simple and quick utilities for you to upload, delete and query personal images.
+Python package `smms.py` is a command line toolkit for managing images at [https://sm.ms](https://sm.ms). It provides simple and quick utilities for you to upload, delete and query personal images.
 
 ## Usage
 
 ### install
 
-The installation procedure could easily be done with `pip`. For exmaple: `pip install smms`.
+The installation procedure could easily be done with `pip`. For exmaple: `pip install smms.py`.
 
 ### upload
 
-Uploading images to [https://sm.ms](https://sm.ms) is pretty simple when using `smms`. For instance:
+Uploading images to [https://sm.ms](https://sm.ms) is pretty simple when using command `smms`. For instance:
 
 ```bash
 smms upload --help
@@ -24,6 +24,7 @@ smms upload --help
 # -c, --comment TEXT  commentation strings, making comments for images
 # --help              Show this message and exit.
 smms upload $HOME/images/*.jpg -c 'example upload'
+# upload all jpg-format images in ~/images/ and comment them
 ```
 
 ### delete
@@ -66,6 +67,6 @@ smms query -d 2018-06-26 -d 2018-06-27 -p 'comment:backup*'
 
 
 
-## Limitation
+## About
 
-* No bash-style autocompletion is to be implemented
+If you have any suggestions, please email me at *queensferry.me@gmail.com*.
