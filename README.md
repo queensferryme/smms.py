@@ -28,7 +28,7 @@ smms delete "*t*" -d 2001-01-01
 # Delete all images with a letter "t" in filename uploaded on 2001-01-01
 ```
 
-You are able to user `filename`, `comment` & `date` to narrow down the scope. You will be required to confirm deletion out of security consideration.
+You can use `filename`, `comment` & `date` to narrow down the scope. You will also be required to confirm deletion out of security consideration.
 
 ### upload
 
@@ -45,9 +45,9 @@ smms upload $HOME/images/*.jpg -c 'example upload'
 # upload all jpg-format images in ~/images/ and comment them
 ```
 
-### seach
+### search
 
-Command `search` enables you to filter and view your local history. Yet another example:
+Command `search` enables you to search and view your local history. Yet another example:
 
 ```bash
 smms search --help
@@ -62,7 +62,17 @@ smms search "*.jpg" -c "*backup*"
 # Search for all jpg-format images commented with 'backup'
 ```
 
-### 
+### migrate
+
+```bash
+smms migrate --help
+# Usage: smms migrate [OPTIONS]
+#   migrate local history from version 0.0.2 to 1.0.0
+# Options:
+#   --help  Show this message and exit.
+```
+
+Help to migrate your old version local history.
 
 ## Change Log
 
