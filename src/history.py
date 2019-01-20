@@ -15,7 +15,7 @@ class History:
     * search for matching records
     '''
     def __init__(self):
-        self.file = path.join(str(Path.home), '.sm.ms.history')
+        self.file = path.join(str(Path.home()), '.sm.ms.history')
         if not path.exists(self.file):
             with open(self.file, 'wt') as fout:
                 json.dump({}, fout)
